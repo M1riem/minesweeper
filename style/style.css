@@ -1,0 +1,53 @@
+html, body{
+      height: 75%;
+      margin: 0;
+}
+
+body {
+      background: black;
+	  align-items: center;
+	  justify-content: center; 
+	  color: rgb(255,228,196);	 
+	  margin: 20 auto 30
+	  font-size: x-lsmall;	  
+    }
+	
+header{
+	color: rgb(255,228,196);
+	margin: 20 auto 30;
+	font-size: x-large;
+}
+
+form{
+	  display: flex;
+	  flex-direction: column;
+	  align-items: flex-start;
+}
+div#menuBar{
+	display: flex;
+	background: #BABEC2;
+    margin: auto;
+}
+
+button#sun{
+	padding: 0px;
+	border: 0px;
+}
+/*button{
+	margin: 0 31%
+}*/
+canvas#game {
+	display: flex;
+    border: 3px solid darkgoldenrod;
+	margin: auto;
+	background: #c0c0c0;
+}
+
+.hover {
+	width: 100%;
+	height: 200px;
+	border: darkgoldenrod solid 2px;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
