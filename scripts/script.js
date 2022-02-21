@@ -1,72 +1,35 @@
-const scripts = document.getElementsByTagName('script');
-const scriptName = scripts[scripts.length-1].src;
-
-//untils
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
-//untils
-function _sort(arr){
-	for(let i=0; i < arr.length; i++){ 
-		for(let j=0; j < arr.length; j++){ 
-			if (arr[i] <= arr[j]){
-				let c = arr[i];
-				arr[i] = arr[j];
-				arr[j] = c;						
-			}
-		}	
-	}
-}
-//untils
-function isFiniteSizeCell(){
-	if (!isFinite(widthCell) || !isFinite(heightCell))
-	{
-		console.log("Error!!! " + scriptName + " Ошибка в " + heightCell.name + "или " + widthCell.name + " Переменная имеет неверный формат.");
-		return true;
-	}
-	return false;
-}
-
 //main parametrs
 let level;
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
-var widthCanvas = 400;//400,600,800
-var heightCanvas = 400;//400, 500, 600
-
-canvas.width = widthCanvas;
-canvas.height = heightCanvas;
 
 let countRow;//8,14,20
 let countColumn;//8,18,24	
-let widthCell = widthCanvas/countColumn;
-let heightCell = heightCanvas/countRow;
+
 
 let amountBombsInMenu;
-let amountBombs;//10, 40, 99
 let numberBomb = 9;
 let cells = [];//игровое поле
-
-
 let font_size;// font_size in cells
 
-
 //коэффициент размера поля
-let size = 100;
+const size = 100;
 //уровень сложности игры
 class Level{
-	amountBombs;
+
+	amountBombs;//10, 40, 99
 	fontSizeCell;
-	countColumn;
+	countColumn;//8,18,24	
+
 	constructor(name, id, flag = false){
 		this.name = name;
 		this.id = id;
 		this.flag = flag;
 		
 		this.number = id+1;
-		this.widthField = size*2*2 + 2*this.id*size;
-		this.heightField = size*2*2 + this.id*size;
-		this.countRow = 10*this.number - 2*this.number - 2*this.id;
+		this.widthField = size*2*2 + 2*this.id*size;//400,600,800
+		this.heightField = size*2*2 + this.id*size;//400, 500, 600
+		this.countRow = 10*this.number - 2*this.number - 2*this.id;//8,14,20
 		// this.countColumn = 10*this.number - 2*this.number;// придумать новую формулу
 		
 		this.setCountColumn();
@@ -157,18 +120,17 @@ class Cell{
 		if (this.isOpen ) return;
 		if (this.isPressedRightButtonMouse){			
 			this.isPressedRightButtonMouse = false;
-			isRigthMark = false;
+			this.isRigthMark = false;
 			this.drawClose();	
 			//изменение количества флагов в меню
 			document.getElementById("countFlags").childNodes[0].nodeValue++;
 		}
 		else{
-			//поменять на imgFlag
 			this.isPressedRightButtonMouse = true;
 			this.drawImage("images/flag_canvas.jpg", this.x, this.y, widthCell/6, heightCell/6, 2*widthCell/3, 2*heightCell/3);
 			//изменение количества флагов в меню
 			document.getElementById("countFlags").childNodes[0].nodeValue--;
-			if (this.isBomb) isRigthMark = true; 
+			if (this.isBomb) this.isRigthMark = true; 
 		}
 	}
 	
@@ -230,7 +192,6 @@ $(document).ready(function(){
 //menu
 //tick of Menu
 let imgTick = "<img src='images/tick.png' width='15' height='15' style='margin: 0px 10px 0px 0px;'/>";
-let imgFlag= "<img src='images/flag_canvas.jpg' width='15' height='15'/>";
 let dropdowns = document.getElementsByClassName("dropdown-content"); 
 let levels = [];			
 
@@ -248,9 +209,10 @@ for(let i = 0; i < dropdowns[0].childElementCount; i++){
 
 //начальные параметры при входе на сайт
 //initial game settings
+let widthCell;
+let heightCell;
 dropdowns[0].children[0].innerHTML = imgTick + dropdowns[0].children[0].text;
 levels[0].flag = true;
-
 init();
 
 //set imgTick in dropdowns.children when level is selected
@@ -292,6 +254,7 @@ window.onclick = function(event) {
 }
 //end menu
 
+
 //set game options depending on the level
 function init(level_id = 0){			
 	level =  levels[level_id];
@@ -307,7 +270,6 @@ function init(level_id = 0){
 	//main parametrs for field
 	countRow = level.countRow;
 	countColumn = level.countColumn;
-	amountBombs = level.amountBombs;
 	font_size = level.fontSizeCell;	
 	
 	//main parametrs for cells
@@ -323,7 +285,7 @@ function _generationBombs(range, amount){
 	
 	let bombs = [];
 	
-	console.log("Генерация бомб:" );
+	console.log("Генерация бомб:");
 	
 	for(let i = 0; i < amount; i++)
 	{ 
@@ -351,8 +313,8 @@ function _drawGrid(level){
 	console.log("range = " + range + "; Level amountBombs = " + level.amountBombs);
 	
 	//генерация бомб
-	bombs = _generationBombs(range, amountBombs);
-	console.log("количество бомб : " + amountBombs + ".\nМеста, на которых находятся бомбы = " + bombs );
+	bombs = _generationBombs(range, level.amountBombs);
+	console.log("количество бомб : " + level.amountBombs + ".\nМеста, на которых находятся бомбы = " + bombs );
 	console.log("строк : " + countRow + "; столбцов:" + countColumn);
 	
 	// отрисовка поля
@@ -530,7 +492,7 @@ canvas.oncontextmenu = function(e){
 canvas.addEventListener('mousedown', mouseDown, false);
 
 let firstLeftClick = 1;
-// let countFlag = level.amountBombs;
+
 function mouseDown( event ){	
 	if ((event.which == 1)||(event.which == 3)){		
 		
