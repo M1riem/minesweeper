@@ -6,17 +6,17 @@
 	<link href="style/style.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script language="javascript" src="scripts/utils.js" type="text/javascript"></script >
+	<script language="javascript" src="scripts/classes/level.js" type="text/javascript"></script >
+	<script language="javascript" src="scripts/classes/cell.js" type="text/javascript"></script >
+	<script language="javascript" src="scripts/main.js" type="text/javascript"></script >
+	<script language="javascript" src="scripts/menu.js" type="text/javascript"></script >
 	<!-- <script src='scripts/script.js'></script> -->
 	<!-- <script src='scripts/timer.js'></script> -->
 
 </head>
 
 <body>
-	<header>
-		<h1 align='center'>
-			Сапер
-		</h1>	
-	</header>
+	<header><h1 align='center'>Сапер</h1></header>
 	<div class="form">
 		<div class="menu">
 			<div class="dropdown">	 			
@@ -29,14 +29,13 @@
 				</div>			
 			</div>	
 			<div class="flag-block" >
-				<img id="flag"  class = "centered_block" src='images/flag_menu.jpg' />
+				<img id="flag_menu"  class = "centered_block" src='images/flag_menu.jpg' />
 				<div id="countFlags" class="centered_block">1</div>
 			</div>				
 			<div id="timer" class="centered_block"><script src="scripts/timer.js"></script>000</div>	
 		</div>
 		<canvas id="game" class="canvas">
 			<script src="scripts/script.js"></script>
-			<!-- <script type='text/javascript'></script> -->
 			Your browser does not support the HTML5 canvas tag.
 		</canvas>
 	</div>
@@ -45,4 +44,3 @@
 </body>
 
 </html>
-				<!-- <script type='text/javascript'></script> -->

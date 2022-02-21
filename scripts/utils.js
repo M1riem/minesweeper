@@ -2,6 +2,10 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function div(val, by){
+	return (val - val % by) / by;
+}
+
 function _sort(arr){
 	for(let i=0; i < arr.length; i++){ 
 		for(let j=0; j < arr.length; j++){ 

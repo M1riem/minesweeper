@@ -1,9 +1,4 @@
-//utils
-function div(val, by){
-	return (val - val % by) / by;
-}
-
-function getText(sec){
+function _getTextTimer(sec){
 	hundreds = div(sec, 100);
 	tens = (div(sec, 10)) % 10;
 	units = sec % 10;
@@ -23,7 +18,7 @@ function stopTimer(){
 function tick()
 {
 	sec++;
-	_text = getText(sec);
+	_text = _getTextTimer(sec);
 	document.getElementById("timer").childNodes[1].nodeValue = _text;			
 	if (sec >= 999) stopTimer();			
 }
