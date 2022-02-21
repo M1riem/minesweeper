@@ -1,50 +1,28 @@
+//main parametrs
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
 
-//Вспомогательное - координаты движущейся мыши
-let mouse = {x: 0, y: 0};
-$(document).ready(function(){
-	//Координаты курсора относительно всего документа
-	$(document).mousemove(function(event){
-		var x = event.pageX;
-		var y = event.pageY;
-		$('#coordsdocument').html( 'Координаты курсора: (' + x + '; ' + y + ')' );
-	});
-	// Координаты курсора относительно отдельного блока
-	$(canvas).mousemove(function(event){
-		var pos = $(this).offset();
-		var elem_left = pos.left.toFixed(0);
-		var elem_top = pos.top.toFixed(0);
-		var x = event.pageX - elem_left;
-		var y = event.pageY - elem_top;
-		mouse.x = x; mouse.y = y;
-		$('#coordscanvas').html( 'Координаты курсора-холста: (' + x + '; ' + y + ')' );
-	});
-});
-
-
-let levels = [];
-
-for(let i = 0; i < dropdowns[0].childElementCount; i++){				
-	levels[i] = new Level(dropdowns[0].children[i].id, i);
-}
+let countRow;//8,14,20
+let countColumn;//8,18,24	
+//поле игры
+var cells = [];
+//текущий уровень игры
+var level;
 
 function _generationBombs(range, amount){
 	
 	let bombs = [];
-	
-	console.log("Генерация бомб:");
-	
+		
 	for(let i = 0; i < amount; i++)
 	{ 
 		bombs[i] = getRandomInt(range);
 			for (let j = 0; j < amount; j++){
 				if ((bombs[i] == bombs[j]) && (i!=j))
 				{
-					console.log(" Замена bombs[i] = " + bombs[i] + ", i = "+ i + " ; bombs[j] = " + bombs[j]+ ", j = "+ j);
+					console.log("Replacement bombs[i] = " + bombs[i] + ", i = "+ i + " ; bombs[j] = " + bombs[j]+ ", j = "+ j);
 					bombs[i] = getRandomInt(range);
 					j = 0;
-					console.log("на " + bombs[i]);
+					console.log("on " + bombs[i]);
 				}
 			}
 		_sort(bombs);
@@ -52,9 +30,8 @@ function _generationBombs(range, amount){
 	return bombs;
 }
 
-
-//в дальнейшем общую функцию назвать initialization()
-function _drawGrid(level){
+//инициализация поля, переписать initialization()
+function drawGrid(level){
 	
 	let bombs = [];
 	let range = countRow * countColumn;
@@ -62,11 +39,8 @@ function _drawGrid(level){
 	
 	//генерация бомб
 	bombs = _generationBombs(range, level.amountBombs);
-	console.log("количество бомб : " + level.amountBombs + ".\nМеста, на которых находятся бомбы = " + bombs );
-	console.log("строк : " + countRow + "; столбцов:" + countColumn);
-	
-	// отрисовка поля
-	// занесение бомб в сетку
+	console.log("Rows : " + countRow + "; Columns:" + countColumn);
+	 
 	for (let i=0; i < countRow; i++)
 	{
 		cells[i] = [];
@@ -85,14 +59,14 @@ function _drawGrid(level){
 			
 		}
 	}
-	// вычисление бомб для других клеток в сетке(номера на клетках)
+	// 
 	for (let i=0; i < countRow; i++)
 	{
 		for (let j=0; j < countColumn; j++)
 		{			
 			if (cells[i][j].isBomb)
 			{
-				//учет ботбы для соседних клеток
+				//перенисать cell для хранения такого типа данных
 				//(i-1,j-1); (i-1,j); (i-1,j+1)
 				//(i,j -1) ;  bomb	  (i,j+1)
 				//(i+1,j-1); (i+1,j); (i+1,j+1)
@@ -132,14 +106,14 @@ function _drawGrid(level){
 	}
 	
 	
-	//отрисовка сетки на canvas 
+	//draw empty cells in canvas 
 	for (let i=0; i < countRow; i++){
 		for (let j=0; j < countColumn; j++){
 			cells[i][j].drawClose();												
 		}
 	}	
 	
-	//вывод в консоль нахождения пустых клеток
+	//log empty cells in console
 	let _text = "";
 	for (let i=0; i < countRow; i++){
 		for (let j=0; j < countColumn; j++)			
@@ -279,37 +253,6 @@ function mouseDown( event ){
 	}
 }
 
-function _test(){
-}
-
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-// function myFunction() {
-    // document.getElementById("myDropdown").classList.toggle("show");
-// }
-			
-
-
-// var menu = document.getElementById('menu');
-//блокировка контекстного меню menu
-// menu.oncontextmenu = function(e){
-	// return false;
-// }
-// menu.onmousedown = function(event) {
-	// if (event.which == 1) {
-		// alert('Нажата левая кнопка мыши!');
-	// }
-	// if (event.which == 3) {		
-		// return;
-	// }
-// };
-
-function exit(){
-	 p.blah();
-}
-
-// cells.forEach(function(row, i, cells) {
-		// cells[i].forEach(function(cell, j, cells) {
 //открыть все ячейки c указанным номером (в будующем открыть все бомбы)
 function _openAllSameCells(number)
 {
@@ -343,9 +286,24 @@ function _openAllSameCells(number)
 	}
 }
 
-// import * as MyMenu from 'menu.js';
-//import  'menu.js';
-
-//function _calculationGrid()
-//function _generateField()]
-//this.drawBackround("#C37C54");
+//РїРµСЂРµРїРёСЃР°С‚СЊ С„СѓРЅРєС†РёРѕРЅР°Р» 
+//Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅРѕРµ - РєРѕРѕСЂРґРёРЅР°С‚С‹ РґРІРёР¶СѓС‰РµР№СЃСЏ РјС‹С€Рё
+let mouse = {x: 0, y: 0};
+$(document).ready(function(){
+	//РљРѕРѕСЂРґРёРЅР°С‚С‹ РєСѓСЂСЃРѕСЂР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РІСЃРµРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
+	$(document).mousemove(function(event){
+		var x = event.pageX;
+		var y = event.pageY;
+		$('#coordsdocument').html( 'РљРѕРѕСЂРґРёРЅР°С‚С‹ РєСѓСЂСЃРѕСЂР°: (' + x + '; ' + y + ')' );
+	});
+	// РљРѕРѕСЂРґРёРЅР°С‚С‹ РєСѓСЂСЃРѕСЂР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ Р±Р»РѕРєР°
+	$(canvas).mousemove(function(event){
+		var pos = $(this).offset();
+		var elem_left = pos.left.toFixed(0);
+		var elem_top = pos.top.toFixed(0);
+		var x = event.pageX - elem_left;
+		var y = event.pageY - elem_top;
+		mouse.x = x; mouse.y = y;
+		$('#coordscanvas').html( 'РљРѕРѕСЂРґРёРЅР°С‚С‹ РєСѓСЂСЃРѕСЂР°-С…РѕР»СЃС‚Р°: (' + x + '; ' + y + ')' );
+	});
+});
