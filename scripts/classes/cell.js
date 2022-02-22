@@ -1,3 +1,12 @@
+//ширина €чейки
+let widthCell;
+//высота €чейки
+let heightCell;
+// номер бомбы на поле
+let numberBomb = 9;
+//шрифт €чейки
+let font_size;
+
 //клетка пол€
 class Cell{
 	//нажатие правой кнопки мыши
