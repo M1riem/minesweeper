@@ -8,10 +8,9 @@
 	<script language="javascript" src="scripts/utils.js" type="text/javascript"></script >
 	<script language="javascript" src="scripts/classes/level.js" type="text/javascript"></script >
 	<script language="javascript" src="scripts/classes/cell.js" type="text/javascript"></script >
+	<!-- <script language="javascript" src="scripts/menu.js" type="text/javascript"></script > -->
 	<script language="javascript" src="scripts/main.js" type="text/javascript"></script >
-	<script language="javascript" src="scripts/menu.js" type="text/javascript"></script >
-	<!-- <script src='scripts/script.js'></script> -->
-	<!-- <script src='scripts/timer.js'></script> -->
+	
 
 </head>
 
@@ -21,12 +20,14 @@
 		<div class="menu">
 			<div class="dropdown">	 			
 				<!-- простой выпадающий список -->
+
 				<button onclick="clickMenu()" class="dropbtn" title="Меню игры">Меню</button>
 				<div id="menuDropdown" class="dropdown-content">
 					<a href="#" id="simple">Простой</a>
 					<a href="#" id="middle">Средний</a>
 					<a href="#" id="hard">Сложный</a>
-				</div>			
+				</div>
+				<script src="scripts/menu.js"></script>
 			</div>	
 			<div class="flag-block" >
 				<img id="flag_menu"  class = "centered_block" src='images/flag_menu.jpg' />

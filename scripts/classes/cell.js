@@ -15,10 +15,10 @@ class Cell{
 	isRigthMark;
 	
 	//добавить ширину €чейки и высоту €чейки в конструктор
-	constructor(x , y, countNeighbors = 0, isBomb = false, isOpen = false){
+	constructor(x , y, number = 0, isBomb = false, isOpen = false){
 		this.x = x;
 		this.y = y;
-		this.countNeighbors = countNeighbors;
+		this.number = number;
 		this.isBomb = isBomb;
 		this.isOpen = isOpen;
 		this.isPressedRightButtonMouse = false;
@@ -53,8 +53,8 @@ class Cell{
 		//отрисовка номеров
 		context.fillStyle = "#000";
 		context.font = font_size + " serif";
-		if (this.countNeighbors != 0)
-			context.fillText(this.countNeighbors, this.x + widthCell/3, this.y + heightCell*0.75 );	
+		if (this.number != 0)
+			context.fillText(this.number, this.x + widthCell/3, this.y + heightCell*0.75 );	
 	}
 	
 	drawFlag(){
