@@ -35,8 +35,7 @@ function init(level_id = 0){
 	//main parametrs for cells
 	widthCell = canvas.width/countColumn;
 	heightCell = canvas.height/countRow;
-	if (isFiniteSizeCell()) return;
-	
+	if (isNotFiniteSizeCell(widthCell, heightCell)) return;
 	drawGrid(level);
 }
 
