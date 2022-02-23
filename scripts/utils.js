@@ -18,18 +18,17 @@ function _sort(arr){
 	}
 }
 
-function isFiniteSizeCell(){
-	if (!isFinite(widthCell) || !isFinite(heightCell))
+function isNotFiniteSizeCell(width, height){
+	if (!isFinite(width) || !isFinite(height) || isNaN(width) || isNaN(height))
 	{
 		let scripts = document.getElementsByTagName('script');
 		let scriptName = scripts[scripts.length-1].src;
-		console.log("Error!!! " + scriptName + " Ошибка в " + heightCell.name + "или " + widthCell.name + " Переменная имеет неверный формат.");
+		console.log("Error!!! " + scriptName + " Ошибка в " + height.name + " или " + width.name + ". Переменная имеет неверный формат.");
 		return true;
 	}
 	return false;
 }
 
-//utils 
 function createArrayRandom(range, count){	
 	let arr = [];	
 	for(let i = 0; i < count; i++)
@@ -45,8 +44,7 @@ function createArrayRandom(range, count){
 				//console.log("on " + arr[i]);
 			}
 		}
-		//console.log("arr[" + i + "] = " + arr[i]);
-		
+		//console.log("arr[" + i + "] = " + arr[i]);		
 	}
 	_sort(arr);
 	//console.log(arr);
