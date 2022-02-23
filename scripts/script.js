@@ -1,5 +1,6 @@
 //main parametrs
 var canvas = document.getElementById('game');
+var menu = document.getElementsByClassName('menu')[0];
 var context = canvas.getContext('2d');
 
 let countRow;//8,14,20

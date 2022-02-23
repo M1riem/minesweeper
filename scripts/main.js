@@ -25,6 +25,9 @@ function init(level_id = 0){
 	canvas.width = level.widthField;
 	canvas.height = level.widthField;
 	
+	//main parametrs menu
+	menu.setAttribute("style","width:" + level.widthField + "px");
+	
 	//draw flag in menu
 	drawImgFlagMenu();
 	//main parametrs for field
