@@ -8,8 +8,8 @@ body {
 	  align-items: center;
 	  justify-content: center; 
 	  color: rgb(255,228,196);	 
-	  margin: 20 auto 30
-	  font-size: x-lsmall;	  
+	  margin: 20px auto 30px;
+	  font-size: large;	  
     }
 	
 header{
@@ -33,7 +33,7 @@ header{
 
 .menu{
 	display: inline-flex;
-	/* background: #2f4f4f; */
+	border: 3px solid darkgoldenrod;
 	background: #88706B;
 	padding: 0px;
 	margin: 0px;
