@@ -28,3 +28,27 @@ function isFiniteSizeCell(){
 	}
 	return false;
 }
+
+//utils 
+function createArrayRandom(range, count){	
+	let arr = [];	
+	for(let i = 0; i < count; i++)
+	{ 
+		arr[i] = getRandomInt(range);
+		for (let j = 0; j < arr.length; j++){
+			//console.log("j = " + j);
+			if ((arr[i] == arr[j]) && (i!=j))
+			{	
+				//console.log("Replacement arr["+i+"] = " + arr[i] +" ; arr["+j+"] = " + arr[j]);
+				arr[i] = getRandomInt(range);
+				j = -1;
+				//console.log("on " + arr[i]);
+			}
+		}
+		//console.log("arr[" + i + "] = " + arr[i]);
+		
+	}
+	_sort(arr);
+	//console.log(arr);
+	return arr;
+}
