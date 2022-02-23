@@ -5,62 +5,54 @@ var context = canvas.getContext('2d');
 let countRow;//8,14,20
 let countColumn;//8,18,24	
 
-class Field{
-	isClosed;
-	cells;
-	constructor(level){
-		this.isClosed = true;
-		this.width = level.widthField;
-		this.height = level.heightField;
-		this.rows = level.countRow;
-		this.columns = level.countColumn;
-		this.amountBombs = level.amountBombs;	
-		
-		this.widthCell = this.width/this.countColumn;
-		this.widthCell = this.height/this.countRow;
-		if (isFiniteSizeCell()) return;
-		
-		this.init(this.rows, this.columns);
+function logNumbers(arr, columns){
+	let _text = "[";
+	for(let i = 0; i < arr.length; i++){
+		if (i % columns == 0) _text+="\n";
+		_text+= arr[i] + "," 
 	}
+	_text+="\n]";
+	console.log(_text);
+}
 
-	init(){
-		if(isClosed) {
-			for (let i = 0; i < rows; i++)
-			{
-				for (let j = 0; j < columns; j++){
-					
+/* Квадрат вокруг цели - 8 значений
+	//(i-1,j-1); (i-1,j); (i-1,j+1)
+	//(i,j -1) ;  target	  (i,j+1)
+	//(i+1,j-1); (i+1,j); (i+1,j+1)
+*/
+function fillSquareAroundTarget(row, column, array, maxRow, maxColumn){	
+	for(let i = row-1; i <= row + 1 ; i++)
+	{
+		if ((i >= 0) && (i < maxRow))
+		{
+			for(let j = column-1; j <= column + 1; j++)
+			{					
+				if ((j >= 0) && (j < maxColumn) && !((j==column)&&(i==row)) && ( array[ i*maxColumn + j ] != numberBomb )) {
+					array[ i*maxColumn + j ]++;
 				}
 			}
 		}
-	}
 
-	draw()
-	{
-		if( isClosed )
-		{
-			
-		}
-		else
-		{
-			
-		}
 	}
+	return array;
 }
 
 //инициализация поля, переписать initialization()
+let field;
 function drawGrid(level){
+	field = new Field(level);
 	
-	let field = new Field(level);
-	//создание поля
-	cells = addField(cells, level.countRow, level.countColumn, level.amountBombs);
+	/*//создание поля
+	//cells = addField(cells, level.countRow, level.countColumn, level.amountBombs);
 	// console.log(arr);
 	// logCells(cells);
 
 	//draw cells on canvas 
-	drawFieldClosed(level.countRow, level.countColumn);
+	//drawFieldClosed(level.countRow, level.countColumn);
 	
 	//log empty cells in console
-	logEmptyCells(level);
+	//logEmptyCells(level);
+	*/
 	
 }
 
@@ -153,8 +145,6 @@ function logCells(cells){
 	});
 }
 
-
-
 //или переименовать функцию (Same = Empty) или добавить третий коэффециент - number
 //cжедать один проход на бумаге
 //сделать 
@@ -228,6 +218,25 @@ canvas.addEventListener('mousedown', mouseDown, false);
 let firstLeftClick = 1;
 
 function mouseDown( event ){	
+	if (event.which == 1){	
+		
+		let target = field.findCell(mouse.x, mouse.y);
+		console.log("нажата левая кнопка мыши: " + "x = " + mouse.x + ", y = " + mouse.y);
+		switch(field.findCell(mouse.x, mouse.y).number){
+			case 0: _openNearEmptyCells(i,j); break;
+			case numberBomb : openAllSameCells(numberBomb); break;
+			default : cell.drawOpen( ); break;								
+		}							
+	}
+		
+	if(event.which == 3){		
+		console.log("нажата правая кнопка мыши: " + "x = " + mouse.x + ", y = " + mouse.y);
+		cell.drawFlag();	
+		console.log("проверка правого флага: " + cell.isPressedRightButtonMouse);
+	}			
+}
+/* старый mouseDown( event )
+function mouseDown( event ){	
 	if ((event.which == 1)||(event.which == 3)){		
 		
 		cells.forEach(function(row, i, cells) {
@@ -264,6 +273,7 @@ function mouseDown( event ){
 		});					
 	}
 }
+*/
 
 //открыть все ячейки c указанным номером (в будующем открыть все бомбы)
 function openAllSameCells(number)
@@ -300,9 +310,19 @@ $(document).ready(function(){
 
 
 function test(){
-	for(let k = 0; k <= 2; k++){
-		for(let t = 0; t <=2; t++) {
-			if ((k==1)||(t==1)) console.log("(" + k + "," + t + ")");
-		}
+	var sayings = new Map();
+	sayings.set("dog", "woof");
+	sayings.set("cat", "meow").set("elephant", "toot");
+	//вызов функции .set возвращает Map, поэтому set можно объединять в цепочки
+
+	sayings.set("dog", "гав-гав"); // заменить значение по ключу
+
+	sayings.size; // 3
+	sayings.get("fox"); // undefined
+	sayings.has("bird"); // false
+	sayings.delete("dog");
+
+	for (var [key, value] of sayings) {
+	  console.log(key + " goes " + value);
 	}
 }

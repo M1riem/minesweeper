@@ -34,6 +34,7 @@ function createArrayRandom(range, count){
 	for(let i = 0; i < count; i++)
 	{ 
 		arr[i] = getRandomInt(range);
+		//arr[i] = (function(){ return Math.floor(Math.random() * range) ;});
 		for (let j = 0; j < arr.length; j++){
 			//console.log("j = " + j);
 			if ((arr[i] == arr[j]) && (i!=j))
@@ -50,3 +51,4 @@ function createArrayRandom(range, count){
 	//console.log(arr);
 	return arr;
 }
+
