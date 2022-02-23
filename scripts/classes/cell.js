@@ -25,6 +25,12 @@ class Cell{
 		this.isRigthMark = false;
 	}
 	
+	_find(x, y){
+		if ((this.x < x) && (this.y < y) && (this.x + widthCell >= x) && (this.y + heightCell >= y))
+			return this;
+		return null;
+	}
+	
 	drawClose(){	
 		this.drawBackround("#C0C0C0");
 		this.drawBorders("1");
