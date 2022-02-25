@@ -1,19 +1,9 @@
-function logNumbers(arr, columns){
-	let _text = "[";
-	for(let i = 0; i < arr.length; i++){
-		if (i % columns == 0) _text+="\n";
-		_text+= arr[i] + "," 
-	}
-	_text+="\n]";
-	console.log(_text);
-}
-
 class Field{
 	constructor(level){
 		this.isClosed = true;
 		this.width = level.widthField;
 		this.height = level.heightField;		
-		this.rows = level.countRow;		
+		this.rows = level.countRow;	
 		this.columns = level.countColumn;		
 		this.amountBombs = level.amountBombs;		
 		
@@ -22,48 +12,93 @@ class Field{
 		if (isNotFiniteSizeCell(this.widthCell, this.heightCell)) return;
 		
 		this.bombs = createArrayRandom(this.rows * this.columns, this.amountBombs);
-		this.cells = [];
+		this.map = new Map();
 		this.init();
 	}
-
-	addNumbers(){
-		let arr = [].fill.call( {length: this.rows * this.columns}, 0);
-		//изменить код fillSquareAroundTarget
-		for (let i = 0; i < this.bombs.length; i++){
-			arr[this.bombs[i]] = numberBomb;  
-			arr = fillSquareAroundTarget(div(this.bombs[i], this.columns), (this.bombs[i] % this.columns), arr, this.rows, this.columns);
-		}
-		this.numbers = arr;
+	
+	init(){	
+		this.create();
+		console.log(this.bombs);
+		this.addBombs();		
+		console.log(this.map);
+		//this.isClosed = false;
+		this.draw();	
 	}
 	
-	init(){		
-		console.log(this.bombs);
-		this.addNumbers();
-		logNumbers(this.numbers, this.columns);
-		//this.isClosed = false;
-		this.draw();
-		
-	}
-
-	draw()
-	{
-		if( this.isClosed )
+	create(){
+		let x,y;
+		//создать поле
+		for (let i = 0; i < this.rows; i++)
 		{
-			for (let i = 0; i < this.rows; i++)
-			{
-				for (let j = 0; j < this.columns; j++){
-					this.cells[i*this.columns + j] = new Cell(this.widthCell*j, this.heightCell*i, this.numbers[i*this.columns + j]);
-					this.cells[i*this.columns + j].drawClose();
+			for (let j = 0; j < this.columns; j++){
+				x = this.widthCell*j ; 		y = this.heightCell*i;
+				this.map.set(x + ", " + y , new Cell(x, y) );
+			}
+		}
+		//переписать на foreach
+		//добавление listNeighbors в каждую cell
+		for (let i = 0; i < this.rows; i++)
+		{
+			for (let j = 0; j < this.columns; j++){
+				x = this.widthCell*j ; 		y = this.heightCell*i;
+				this.map.get(x + ", " + y).listNeighbors = this.addNeighbors(this.map.get(x + ", " + y));
+			}
+		}
+	}
+	//переделать на foreach
+	addBombs(){
+		let x,y;
+		for (let i = 0; i < this.rows; i++)
+		{
+			for (let j = 0; j < this.columns; j++){
+				x = this.widthCell*j ; 		y = this.heightCell*i;
+				if (this.bombs[0] ==  i*this.columns + j) {
+					//console.log("this.bombs[0] =" + this.bombs[0] + " == (" + x + ", " + y + ")");
+					let target = this.map.get(x + ", " + y);
+					target.isBomb = true;
+					target.number = numberBomb;
+					
+					// заполнение номерами
+					for (let k = 0; k < target.listNeighbors.length; k++ )
+						if (!target.listNeighbors[k].isBomb)  
+							target.listNeighbors[k].number++;
+																
+					this.bombs = this.bombs.slice(1);
+				}	
+			}
+		}
+	}
+	//переписать на foreach
+	addNeighbors(cell){
+		let list = [];
+		let row = cell.y/heightCell;
+		let column = cell.x/widthCell;
+		let x,y;
+		
+		for (let i = row-1; i <= row+1; i++){
+			if ((i >= 0) && (i < this.rows)) {
+				for (let j = column -1; j <= column + 1; j++){
+					if ((j >= 0) && (j < this.columns) && !(( j==column)&&(i==row))) {
+						x = j*widthCell; y = i*heightCell;
+						list.push(this.map.get(x + ", " + y));
+					}
 				}
 			}
 		}
-		else
+		return list;		
+	}
+	//переписать на foreach
+	draw()
+	{
+		let x,y;
+		for (let i = 0; i < this.rows; i++)
 		{
-			for (let i = 0; i < this.rows; i++)
-			{
-				for (let j = 0; j < this.columns; j++){
-					new Cell(this.widthCell*j, this.heightCell*i, this.numbers[i*this.columns + j]).drawOpen();
-				}
+			for (let j = 0; j < this.columns; j++){
+				x = this.widthCell*j ; 		y = this.heightCell*i;				
+				if( this.isClosed )
+					this.map.get(x + ", " + y).drawClose();
+				else 
+					this.map.get(x + ", " + y).drawOpen();
 			}
 		}
 	}
@@ -71,12 +106,9 @@ class Field{
 	findCell(x,y){
 		//доделать
 		//let cell = 
-		let cell = cells.find(_find);
-		console.log("cell = " + cell);
-		return cell;
-	}
-	
-	_find(elem){
-		elem._find()
+		//let cell = cells.find(_find);
+		//console.log("cell = " + cell);
+		//return cell;
+		return null;
 	}
 }

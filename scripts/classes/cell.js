@@ -13,7 +13,7 @@ class Cell{
 	isPressedRightButtonMouse;
 	//мина помечена верно
 	isRigthMark;
-	
+
 	//добавить ширину €чейки и высоту €чейки в конструктор
 	constructor(x , y, number = 0, isBomb = false, isOpen = false){
 		this.x = x;
@@ -23,8 +23,9 @@ class Cell{
 		this.isOpen = isOpen;
 		this.isPressedRightButtonMouse = false;
 		this.isRigthMark = false;
+		this.listNeighbors = [];
 	}
-	
+		
 	_find(x, y){
 		if ((this.x < x) && (this.y < y) && (this.x + widthCell >= x) && (this.y + heightCell >= y))
 			return this;
