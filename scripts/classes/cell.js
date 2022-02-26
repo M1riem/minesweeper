@@ -54,7 +54,11 @@ class Cell{
 		
 		if (this.isBomb) {
 			//поменять на imgBomb
-			this.drawBackround("#CE8F00");		
+			//this.drawBackround("#CE8F00");		
+			this.drawBackround("#C0C0C0");
+			this.drawImage("images/bomb.jpg", this.x, this.y, widthCell/12,  heightCell/12, 5*widthCell/6, 5*heightCell/6);
+			this.drawBorders("1");
+			return;
 		}
 
 		//отрисовка номеров
