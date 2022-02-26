@@ -46,8 +46,8 @@ class Level{
 	setFontSizeCells(){
 		switch(this.amountBombs){
 			case 10: this.fontSizeCell = "36px"; break;
-			case 40: this.fontSizeCell = "30px"; break;
-			case 99: this.fontSizeCell = "30px"; break;
+			case 40: this.fontSizeCell = "26px"; break;
+			case 99: this.fontSizeCell = "24px"; break;
 			default: this.fontSizeCell = "26px"; break;
 		}
 	}

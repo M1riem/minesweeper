@@ -19,7 +19,7 @@ function tick()
 {
 	sec++;
 	_text = _getTextTimer(sec);
-	document.getElementById("timer").childNodes[1].nodeValue = _text;			
+	document.getElementById("timer").childNodes[1].nodeValue = _text;	
 	if (sec >= 999) stopTimer();			
 }
 

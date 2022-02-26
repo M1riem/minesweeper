@@ -23,7 +23,7 @@ class Field{
 		this.addBombs();				
 		//this.isClosed = false;
 		this.draw();
-		this.logEmptyCells();		
+		//this.logEmptyCells();		
 	}
 	
 	//переписать без x,y
@@ -38,14 +38,15 @@ class Field{
 			}
 		}
 		//добавление массива listNeighbors в каждую cell
-		this.map.forEach((value) => {value.listNeighbors = this.addNeighbors(value);}, this);
+		this.map.forEach((value, key) => {value.listNeighbors = this.addNeighbors(value, key);}, this);
 	}
 	
 	addBombs(){		
 		this.map.forEach(function (cell, key)
 		{	
 			let keys = key.split(", "); 		
-			let j = Number(keys[0]), i = Number(keys[1]); //console.log(key + "= (" + (i*this.columns + j) + ")");
+			let j = Number(keys[0]), i = Number(keys[1]); 
+			//console.log(key + "= (" + (i*this.columns + j) + ")");
 			if (this.bombs[0] == i*this.columns + j) {
 				cell.isBomb = true;
 				cell.number = numberBomb;
@@ -60,11 +61,11 @@ class Field{
 	//(i,j -1) ;  target	  (i,j+1)
 	//(i+1,j-1); (i+1,j); (i+1,j+1)
 */
-	addNeighbors(cell){
+	addNeighbors(cell, key){
 		let list = [];
-		//переписать без деления.
-		let row = cell.y/heightCell;
-		let column = cell.x/widthCell;
+		let keys = key.split(", "); 		
+		let column = Number(keys[0]), row = Number(keys[1]); 
+		//console.log(key + " = (" + column + ", " + row + ")");
 		
 		for (let i = row-1; i <= row+1; i++)
 			if ((i >= 0) && (i < this.rows)) 

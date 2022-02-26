@@ -22,7 +22,7 @@ function init(level_id = 0){
 	
 	//main parametrs canvas
 	canvas.width = level.widthField;
-	canvas.height = level.widthField;
+	canvas.height = level.heightField;
 	
 	//width of menu-bar
 	menu.setAttribute("style","width:" + level.widthField + "px");
