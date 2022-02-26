@@ -19,96 +19,113 @@ class Field{
 	init(){	
 		this.create();
 		console.log(this.bombs);
-		this.addBombs();		
 		console.log(this.map);
+		this.addBombs();				
 		//this.isClosed = false;
-		this.draw();	
+		this.draw();
+		this.logEmptyCells();		
 	}
 	
+	//переписать без x,y
 	create(){
 		let x,y;
-		//создать поле
+		//создать поле - переписать без x,y
 		for (let i = 0; i < this.rows; i++)
 		{
 			for (let j = 0; j < this.columns; j++){
 				x = this.widthCell*j ; 		y = this.heightCell*i;
-				this.map.set(x + ", " + y , new Cell(x, y) );
+				this.map.set(j + ", " + i , new Cell(x, y) );
 			}
 		}
-		//переписать на foreach
-		//добавление listNeighbors в каждую cell
-		for (let i = 0; i < this.rows; i++)
-		{
-			for (let j = 0; j < this.columns; j++){
-				x = this.widthCell*j ; 		y = this.heightCell*i;
-				this.map.get(x + ", " + y).listNeighbors = this.addNeighbors(this.map.get(x + ", " + y));
-			}
-		}
-	}
-	//переделать на foreach
-	addBombs(){
-		let x,y;
-		for (let i = 0; i < this.rows; i++)
-		{
-			for (let j = 0; j < this.columns; j++){
-				x = this.widthCell*j ; 		y = this.heightCell*i;
-				if (this.bombs[0] ==  i*this.columns + j) {
-					//console.log("this.bombs[0] =" + this.bombs[0] + " == (" + x + ", " + y + ")");
-					let target = this.map.get(x + ", " + y);
-					target.isBomb = true;
-					target.number = numberBomb;
-					
-					// заполнение номерами
-					for (let k = 0; k < target.listNeighbors.length; k++ )
-						if (!target.listNeighbors[k].isBomb)  
-							target.listNeighbors[k].number++;
-																
-					this.bombs = this.bombs.slice(1);
-				}	
-			}
-		}
-	}
-	//переписать на foreach
-	addNeighbors(cell){
-		let list = [];
-		let row = cell.y/heightCell;
-		let column = cell.x/widthCell;
-		let x,y;
-		
-		for (let i = row-1; i <= row+1; i++){
-			if ((i >= 0) && (i < this.rows)) {
-				for (let j = column -1; j <= column + 1; j++){
-					if ((j >= 0) && (j < this.columns) && !(( j==column)&&(i==row))) {
-						x = j*widthCell; y = i*heightCell;
-						list.push(this.map.get(x + ", " + y));
-					}
-				}
-			}
-		}
-		return list;		
-	}
-	//переписать на foreach
-	draw()
-	{
-		let x,y;
-		for (let i = 0; i < this.rows; i++)
-		{
-			for (let j = 0; j < this.columns; j++){
-				x = this.widthCell*j ; 		y = this.heightCell*i;				
-				if( this.isClosed )
-					this.map.get(x + ", " + y).drawClose();
-				else 
-					this.map.get(x + ", " + y).drawOpen();
-			}
-		}
+		//добавление массива listNeighbors в каждую cell
+		this.map.forEach((value) => {value.listNeighbors = this.addNeighbors(value);}, this);
 	}
 	
+	addBombs(){		
+		this.map.forEach(function (cell, key)
+		{	
+			let keys = key.split(", "); 		
+			let j = Number(keys[0]), i = Number(keys[1]); //console.log(key + "= (" + (i*this.columns + j) + ")");
+			if (this.bombs[0] == i*this.columns + j) {
+				cell.isBomb = true;
+				cell.number = numberBomb;
+				cell.listNeighbors.forEach(neighbor => {if (!neighbor.isBomb) neighbor.number++;} );	
+				this.bombs = this.bombs.slice(1);				
+			}		
+		}, this);
+	}
+	
+	/* Квадрат вокруг цели - 8 значений
+	//(i-1,j-1); (i-1,j); (i-1,j+1)
+	//(i,j -1) ;  target	  (i,j+1)
+	//(i+1,j-1); (i+1,j); (i+1,j+1)
+*/
+	addNeighbors(cell){
+		let list = [];
+		//переписать без деления.
+		let row = cell.y/heightCell;
+		let column = cell.x/widthCell;
+		
+		for (let i = row-1; i <= row+1; i++)
+			if ((i >= 0) && (i < this.rows)) 
+				for (let j = column -1; j <= column + 1; j++)
+					if ((j >= 0) && (j < this.columns) && !(( j==column)&&(i==row))) 
+						list.push(this.map.get(j + ", " + i));
+		return list;		
+	}
+	
+	draw(){		
+		this.map.forEach( (cell) => { this.isClosed ? cell.drawClose() : cell.drawOpen(); }, this);	
+	}
+
+	drawAllBombs(){
+		this.map.forEach((cell) => { if(cell.isBomb) cell.drawOpen(); } );		
+	}
+
+	drawNearEmptyCells(cell){
+		// console.log("enter in : " + "(" + cell.x + ", " + cell.y + ");" );
+		if (cell.isOpen)
+		{	
+			// console.log("(" + cell.x + "," + cell.y + ") - this open = return");
+			return;
+		}
+		cell.drawOpen();		
+		//console.log(cell.listNeighbors);
+		cell.listNeighbors.forEach(function(value){
+			//отрисовка  номеров рядом с путой ячейкой
+			if ( (value.number != 0) && (!value.isBomb) )
+			{
+				//console.log( "drawOpen(" + value.x + "," + value.y + ").number = " + value.number);
+				value.drawOpen();
+			}
+			if ( (value.number == 0) && ((cell.x == value.x) || (cell.y == value.y)) )
+			{
+				// console.log("(" + value.x + "," + value.y + ") =>");
+				this.drawNearEmptyCells(value);
+				// console.log("(" + value.x + "," + value.y + ") <=");	
+			}
+		}, this// указываю контекст вызова - объект в котором сейчас нахожсь
+		);
+
+		// console.log("exit: " + "(" + cell.x + ", " + cell.y + ");" );
+	}	
+	//переписать
 	findCell(x,y){
-		//доделать
-		//let cell = 
-		//let cell = cells.find(_find);
-		//console.log("cell = " + cell);
-		//return cell;
-		return null;
+		
+		let i = (div(y, heightCell) == this.rows) ? this.rows-1 : div(y, heightCell);
+		let j = (div(x, widthCell) == this.columns) ? this.columns-1 : div(x, widthCell);
+				// console.log("(" + x + " ," + y + ") = {" + i*heightCell + ", " + j*widthCell + "}" );
+		//console.log("(" + x + " ," + y + ") = {" + j + ", " + i + "}" );
+		return this.map.get(j + ", " + i);
+	}
+	//log empty cells in console
+	logEmptyCells(){
+		let _text = "";
+		for (let i=0; i < this.rows; i++){
+			for (let j=0; j < this.columns; j++)
+				if (this.map.get(j + ", " + i).number == 0) _text += "(" + j + ", " + i + "); ";						
+			if (_text!="") console.log("Empty : " + _text);
+			_text = "";
+		}	
 	}
 }

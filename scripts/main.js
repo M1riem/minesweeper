@@ -1,13 +1,12 @@
-//поле игры
-var cells = [];
 //текущий уровень игры
 var level;
+//поле игры
+var field;
 
 //main parametrs
 window.onload = start;
     
-function start(){
-	
+function start(){	
     // console.log('page loaded');
 	dropdowns[0].children[0].innerHTML = imgTick + dropdowns[0].children[0].text;
 	levels[0].flag = true;
@@ -25,21 +24,20 @@ function init(level_id = 0){
 	canvas.width = level.widthField;
 	canvas.height = level.widthField;
 	
-	//main parametrs menu
+	//width of menu-bar
 	menu.setAttribute("style","width:" + level.widthField + "px");
 	
 	//draw flag in menu
 	drawImgFlagMenu();
 	//main parametrs for field
-	countRow = level.countRow;
-	countColumn = level.countColumn;
 	font_size = level.fontSizeCell;	
 	
-	//main parametrs for cells
-	widthCell = canvas.width/countColumn;
-	heightCell = canvas.height/countRow;
+	//main parametrs for field
+	widthCell = canvas.width/level.countColumn;
+	heightCell = canvas.height/ level.countRow;
 	if (isNotFiniteSizeCell(widthCell, heightCell)) return;
-	drawGrid(level);
+	field = new Field(level);
+	// console.log(field);
 }
 
   
