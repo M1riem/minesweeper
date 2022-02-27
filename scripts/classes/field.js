@@ -19,7 +19,7 @@ class Field{
 	init(){	
 		this.create();
 		console.log(this.bombs);
-		console.log(this.map);
+		//console.log(this.map);
 		this.addBombs();				
 		//this.isClosed = false;
 		this.draw();
