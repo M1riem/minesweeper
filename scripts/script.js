@@ -14,7 +14,6 @@ canvas.addEventListener('mousedown', mouseDown, false);
 let firstLeftClick = 1;
 
 function mouseDown( event ){	
-	let x,y;
 	let cell = field.findCell(mouse.x, mouse.y);
 	if (event.which == 1){	
 		console.log("нажата левая кнопка мыши: " + "x = " + mouse.x + ", y = " + mouse.y);

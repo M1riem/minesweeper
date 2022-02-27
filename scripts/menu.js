@@ -49,10 +49,19 @@ let imgTick = "<img src='images/tick.png' width='15' height='15' style='margin: 
 // set image of flag in menu - переделать и убрать в html
 function drawImgFlagMenu(){
 	let padding = 5; 
-	let imgFlagMenu = document.getElementById('flag_menu');
 	let dropbtn = document.getElementsByClassName("dropbtn")[0];
+	let imgFlagMenu = document.getElementById('flag_img');
+	let imgTimerMenu = document.getElementById('timer_img');
+	//вычисление размера картинки flag_img
 	imgFlagMenu.height = dropbtn.clientHeight - 2*padding;
-	imgFlagMenu.width = dropbtn.clientHeight;
+	imgFlagMenu.width = dropbtn.clientHeight - 2*padding;
+	//вычисление размера картинки timer_img
+	imgTimerMenu.height = dropbtn.clientHeight - 2*padding;
+	imgTimerMenu.width = dropbtn.clientHeight - 2*padding;
+	//центрирование flag_img и timer_img
+	let offset = 1.5 * padding * (1-level.id );
+	let padding_left = ( (level.number)*( imgFlagMenu.width + imgTimerMenu.width) - offset);
+	imgFlagMenu.setAttribute("style","padding-left:" +  padding_left + "px");
 }
 //turn off context-menu for menu-bar
 document.getElementsByClassName("menu")[0].oncontextmenu = function(e){
