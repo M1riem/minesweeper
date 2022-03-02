@@ -16,7 +16,7 @@ window.onclick = function(event) {
 	}
 }
 
-//уровни игры
+//список уровней игры
 let levels = [];
 
 let dropdowns = document.getElementsByClassName("dropdown-content");  
@@ -26,32 +26,35 @@ for(let i = 0; i < dropdowns[0].childElementCount; i++){
 }
 
 //image-tick of drop-down menu
-let imgTick = "<img src='images/tick.png' width='15' height='15' style='margin: 0px 10px 0px 0px;'/>";
+let imgCheked = "<img src='images/tick.png' width='15' height='15' style='margin: 0px 10px 0px 0px;'/>";
 	
 //set imgTick in dropdowns.children when level is selected
 [...dropdowns[0].children].forEach((target, i) => {
 	target.addEventListener('click', function(){
 		[...dropdowns[0].children].forEach((level, j) => {
 			if (target.id == level.id){
-				level.innerHTML = imgTick + level.text;
-				levels[j].flag = true;	
-				init(levels[j].id);
+				level.innerHTML = imgCheked + level.text;
+				levels[j].cheked = true;	
+				levelStart(levels[j].id);
 			}
 			else{
 				level.innerHTML = level.text;
-				levels[j].flag = false;
+				levels[j].cheked = false;
 			}						
 		});
 	});	
 });
 
-
 // set image of flag in menu - переделать и убрать в html
-function drawImgFlagMenu(){
+function drawMenuBar(){
 	let padding = 5; 
+	let menu = document.getElementsByClassName('menu')[0];
 	let dropbtn = document.getElementsByClassName("dropbtn")[0];
 	let imgFlagMenu = document.getElementById('flag_img');
 	let imgTimerMenu = document.getElementById('timer_img');
+	
+	//width of menu-bar
+	menu.setAttribute("style","width:" + level.widthField + "px");
 	//вычисление размера картинки flag_img
 	imgFlagMenu.height = dropbtn.clientHeight - 2*padding;
 	imgFlagMenu.width = dropbtn.clientHeight - 2*padding;
@@ -63,6 +66,7 @@ function drawImgFlagMenu(){
 	let padding_left = ( (level.number)*( imgFlagMenu.width + imgTimerMenu.width) - offset);
 	imgFlagMenu.setAttribute("style","padding-left:" +  padding_left + "px");
 }
+
 //turn off context-menu for menu-bar
 document.getElementsByClassName("menu")[0].oncontextmenu = function(e){
 	return false;

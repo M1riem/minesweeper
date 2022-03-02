@@ -1,11 +1,10 @@
 class Field{
 	constructor(level){
-		this.isClosed = true;
 		this.width = level.widthField;
 		this.height = level.heightField;		
 		this.rows = level.countRow;	
 		this.columns = level.countColumn;		
-		this.amountBombs = level.amountBombs;		
+		this.amountBombs = level.amountBombs;	
 		
 		this.widthCell = this.width/this.columns;		
 		this.heightCell = this.height/this.rows;		
@@ -13,111 +12,79 @@ class Field{
 		
 		this.bombs = createArrayRandom(this.rows * this.columns, this.amountBombs);
 		this.map = new Map();
-		this.init();
-	}
-	
-	init(){	
+		
 		this.create();
-		console.log(this.bombs);
-		//console.log(this.map);
-		this.addBombs();				
-		//this.isClosed = false;
 		this.draw();
-		//this.logEmptyCells();		
 	}
-	
-	//переписать без x,y
+
 	create(){
 		let x,y;
-		//создать поле - переписать без x,y
 		for (let i = 0; i < this.rows; i++)
 		{
 			for (let j = 0; j < this.columns; j++){
 				x = this.widthCell*j ; 		y = this.heightCell*i;
-				this.map.set(j + ", " + i , new Cell(x, y) );
+				if (this.bombs[0] == i*this.columns + j){
+					this.map.set(j + ", " + i , new Cell(x, y, this.widthCell, this.heightCell, true));
+					this.bombs = this.bombs.slice(1);
+				}
+				else
+					this.map.set(j + ", " + i , new Cell(x, y, this.widthCell, this.heightCell));
 			}
 		}
-		//добавление массива listNeighbors в каждую cell
+		//добавление массива listNeighbors в каждую cell, определение номеров соседей бомб
 		this.map.forEach((value, key) => {value.listNeighbors = this.addNeighbors(value, key);}, this);
 	}
 	
-	addBombs(){		
-		this.map.forEach(function (cell, key)
-		{	
-			let keys = key.split(", "); 		
-			let j = Number(keys[0]), i = Number(keys[1]); 
-			//console.log(key + "= (" + (i*this.columns + j) + ")");
-			if (this.bombs[0] == i*this.columns + j) {
-				cell.isBomb = true;
-				cell.number = numberBomb;
-				cell.listNeighbors.forEach(neighbor => {if (!neighbor.isBomb) neighbor.number++;} );	
-				this.bombs = this.bombs.slice(1);				
-			}		
-		}, this);
-	}
-	
-	/* Квадрат вокруг цели - 8 значений
+	/* Квадрат вокруг бомбы - 8 значений
 	//(i-1,j-1); (i-1,j); (i-1,j+1)
 	//(i,j -1) ;  target	  (i,j+1)
 	//(i+1,j-1); (i+1,j); (i+1,j+1)
 */
 	addNeighbors(cell, key){
-		let list = [];
+		let listNeighbor = [];
 		let keys = key.split(", "); 		
 		let column = Number(keys[0]), row = Number(keys[1]); 
-		//console.log(key + " = (" + column + ", " + row + ")");
 		
 		for (let i = row-1; i <= row+1; i++)
 			if ((i >= 0) && (i < this.rows)) 
 				for (let j = column -1; j <= column + 1; j++)
-					if ((j >= 0) && (j < this.columns) && !(( j==column)&&(i==row))) 
-						list.push(this.map.get(j + ", " + i));
-		return list;		
+					if ((j >= 0) && (j < this.columns) && !(( j==column)&&(i==row))) {
+						let neighbor = this.map.get(j + ", " + i);
+						if ((cell.isBomb) && (!neighbor.isBomb))  neighbor.number++;
+						listNeighbor.push(neighbor);
+					}						
+		return listNeighbor;		
 	}
 	
-	draw(){		
-		this.map.forEach( (cell) => { this.isClosed ? cell.drawClose() : cell.drawOpen(); }, this);	
-	}
+	draw(){	this.map.forEach( (cell) => { cell.drawClose(); }, this);	}
 
-	drawAllBombs(){
-		this.map.forEach((cell) => { if(cell.isBomb) cell.drawOpen(); } );		
-	}
+	drawAllBombs(){		this.map.forEach((cell) => { if(cell.isBomb) cell.drawOpen(); } );		}
 
 	drawNearEmptyCells(cell){
-		// console.log("enter in : " + "(" + cell.x + ", " + cell.y + ");" );
-		if (cell.isOpen)
-		{	
-			// console.log("(" + cell.x + "," + cell.y + ") - this open = return");
-			return;
-		}
+		if (cell.isOpen)	return;
 		cell.drawOpen();		
-		//console.log(cell.listNeighbors);
-		cell.listNeighbors.forEach(function(value){
+		cell.listNeighbors.forEach(function(neighbor){
 			//отрисовка  номеров рядом с путой ячейкой
-			if ( (value.number != 0) && (!value.isBomb) )
-			{
-				//console.log( "drawOpen(" + value.x + "," + value.y + ").number = " + value.number);
-				value.drawOpen();
-			}
-			if ( (value.number == 0) && ((cell.x == value.x) || (cell.y == value.y)) )
-			{
-				// console.log("(" + value.x + "," + value.y + ") =>");
-				this.drawNearEmptyCells(value);
-				// console.log("(" + value.x + "," + value.y + ") <=");	
-			}
+			if ( (neighbor.number != 0) && (!neighbor.isBomb) )
+			{	neighbor.drawOpen();	}
+			if (  (neighbor.number == 0) && ( (cell.x == neighbor.x) || (cell.y == neighbor.y) )  )
+			{	this.drawNearEmptyCells(neighbor);	}
 		}, this// указываю контекст вызова - объект в котором сейчас нахожсь
 		);
-
-		// console.log("exit: " + "(" + cell.x + ", " + cell.y + ");" );
 	}	
-	//переписать
-	findCell(x,y){
-		
-		let i = (div(y, heightCell) == this.rows) ? this.rows-1 : div(y, heightCell);
-		let j = (div(x, widthCell) == this.columns) ? this.columns-1 : div(x, widthCell);
-				// console.log("(" + x + " ," + y + ") = {" + i*heightCell + ", " + j*widthCell + "}" );
-		//console.log("(" + x + " ," + y + ") = {" + j + ", " + i + "}" );
+	
+	findCell(x,y){	
+		let i = (div(y, this.heightCell) == this.rows) ? this.rows-1 : div(y, this.heightCell);
+		let j = (div(x, this.widthCell) == this.columns) ? this.columns-1 : div(x, this.widthCell);
 		return this.map.get(j + ", " + i);
+	}
+	
+	winCheck(){
+		this.checkBomb = 0;
+		this.map.forEach((cell) => { if (cell.isBomb && cell.isRigthMark)	this.checkBomb++;	}, this);
+		if ( (this.checkBomb == this.amountBombs) && (document.getElementById("countFlags").childNodes[0].nodeValue == 0) ) 
+			return true;
+		return false;
 	}
 	//log empty cells in console
 	logEmptyCells(){

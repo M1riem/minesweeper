@@ -6,23 +6,22 @@ class Level{
 	amountBombs;//10, 40, 99
 	fontSizeCell;
 	countColumn;//8,18,24	
-
-	constructor(name, id, flag = false){
+	
+	constructor(name, id, cheked = false){
 		this.name = name;
 		this.id = id;
-		this.flag = flag;
-		
 		this.number = id+1;
-		//переделать размеры поля в зависимости от размера экрана
+		this.cheked = cheked;
+		this.isLoser = false;
+		this.isOver = false;
+
 		this.widthField = size*2*2 + 2*this.id*size;//400,600,800
 		this.heightField = size*2*2 + this.id*size;//400, 500, 600
 		this.countRow = 10*this.number - 2*this.number - 2*this.id;//8,14,20
-		// this.countColumn = 10*this.number - 2*this.number;// придумать новую формулу
 		
 		this.setCountColumn();
 		this.setAmountBombs();
 		this.setFontSizeCells();
-		// console.log("level: amountBombs = " + this.amountBombs + " fontSizeCell = "+ this.fontSizeCell );
 	}
 	
 	setCountColumn(){

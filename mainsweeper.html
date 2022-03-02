@@ -9,7 +9,6 @@
 	<script language="javascript" src="scripts/classes/level.js" type="text/javascript"></script >	
 	<script language="javascript" src="scripts/classes/field.js" type="text/javascript"></script >
 	<script language="javascript" src="scripts/classes/cell.js" type="text/javascript"></script >
-	<!-- <script language="javascript" src="scripts/menu.js" type="text/javascript"></script > -->
 	<script language="javascript" src="scripts/main.js" type="text/javascript"></script >
 	
 
@@ -21,7 +20,6 @@
 		<div class="menu">
 			<div class="dropdown">	 			
 				<!-- простой выпадающий список -->
-
 				<button onclick="clickMenu()" class="dropbtn" title="Меню игры">Меню</button>
 				<div id="menuDropdown" class="dropdown-content">
 					<a href="#" id="simple">Простой</a>
@@ -40,12 +38,18 @@
 			</div>	
 		</div>
 		<canvas id="game" class="canvas">
-			<script src="scripts/script.js"></script>
+			<script src="scripts/canvas.js"></script>
 			Your browser does not support the HTML5 canvas tag.
 		</canvas>
 	</div>
-	<p id="coordsdocument">Координаты курсора:</p>
-	<p id="coordscanvas">Координаты курсора-холста:</p>
+
+	<div class="c-popup" id="popup">
+		<div class="popup-content">
+		<a id="refresh" href="javascript:PopUpHide()">Hide popup</a>
+    </div>
+	
+</div>
+	
 </body>
 
 </html>

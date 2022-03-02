@@ -5,22 +5,21 @@ function _getTextTimer(sec){
 	return (hundreds +''+ tens +''+ units);
 }
 
-function startTimer()
-{
+function startTimer(){
 	sec = 0;
 	timer = setInterval(tick, 1000);
 }
 
-function stopTimer(){
-	clearInterval(timer);
+function stopTimer(){	clearInterval(timer);	}
+
+function resetTimer(){
+	stopTimer();
+	document.getElementById("timer").childNodes[1].nodeValue = "000";	
 }
 
-function tick()
-{
+function tick(){
 	sec++;
 	_text = _getTextTimer(sec);
 	document.getElementById("timer").childNodes[1].nodeValue = _text;	
 	if (sec >= 999) stopTimer();			
 }
-
-

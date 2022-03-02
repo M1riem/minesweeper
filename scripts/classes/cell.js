@@ -1,87 +1,69 @@
-//ширина €чейки
-let widthCell;
-//высота €чейки
-let heightCell;
-// номер бомбы на поле
-let numberBomb = 9;
-//шрифт €чейки
-let font_size;
-
 //клетка пол€
 class Cell{
-	//нажатие правой кнопки мыши
-	isPressedRightButtonMouse;
+	//флаг на клетке
+	isFlag;
 	//мина помечена верно
 	isRigthMark;
 
 	//добавить ширину €чейки и высоту €чейки в конструктор
-	constructor(x , y, number = 0, isBomb = false, isOpen = false){
+	constructor(x , y, width, height,isBomb = false, number = 0, isOpen = false){
 		this.x = x;
 		this.y = y;
-		this.number = number;
-		this.isBomb = isBomb;
+		this.width = width;
+		this.height = height;
+		this.isBomb = isBomb;		
+		this.number = (this.isBomb) ? numberBomb : number;
 		this.isOpen = isOpen;
-		this.isPressedRightButtonMouse = false;
+		this.isFlag = false;
 		this.isRigthMark = false;
 		this.listNeighbors = [];
 	}
-		
-	_find(x, y){
-		if ((this.x < x) && (this.y < y) && (this.x + widthCell >= x) && (this.y + heightCell >= y))
-			return this;
-		return null;
-	}
 	
-	drawClose(){	
-		this.drawBackround("#C0C0C0");
-		this.drawBorders("1");
-	}
+	drawClose(){	this.drawBackround("#C0C0C0");		}
 	
-	drawOpen(){
-		
+	drawOpen(){		
 		// если клетка была уже открыта
-		if (this.isOpen){
-			//console.log("(" + this.x + "," + this.y + ") - this open");
-			return;
-		} 
-		//проверка на выставленный флаг
-		if (this.isPressedRightButtonMouse) return;
-		
+		if (this.isOpen)  return;
+		//проверка на флаг
+		if (this.isFlag)  return;
+		//если клетка была закрыта
 		this.isOpen = true;		
-		//отрисовка
-		this.drawBackround("#E5E4E2");				
-		this.drawBorders("2");
 		
-		if (this.isBomb) {
-			//помен€ть на imgBomb
-			//this.drawBackround("#CE8F00");		
-			this.drawBackround("#C0C0C0");
-			this.drawImage("images/bomb.jpg", this.x, this.y, widthCell/12,  heightCell/12, 5*widthCell/6, 5*heightCell/6);
-			this.drawBorders("1");
-			return;
-		}
-
-		//отрисовка номеров
-		context.fillStyle = "#000";
-		context.font = font_size + " serif";
-		if (this.number != 0)
-			context.fillText(this.number, this.x + widthCell/3, this.y + heightCell*0.75 );	
+		//отрисовка бомб
+		if (this.isBomb) this.drawBomb(); 
+		else this.drawNumber();	
 	}
 	
+	drawBomb(){
+		this.drawBackround("#C0C0C0");	
+		this.drawImage("images/bomb.jpg", this.x, this.y, this.width/12,  this.height/12, 5*this.width/6, 5*this.height/6);
+	}
+	
+	drawNumber(){
+		//отрисовка фона и границ
+		this.drawBackround("#E5E4E2");						
+		//отрисовка номеров
+		if (this.number != 0) this.drawText();	
+	}
+
 	drawFlag(){
 		if (this.isOpen ) return;
-		if (this.isPressedRightButtonMouse){			
-			this.isPressedRightButtonMouse = false;
+		//если флаг уже установлен - снять флаг
+		if (this.isFlag){			
+			this.isFlag = false;
 			this.isRigthMark = false;
 			this.drawClose();	
 			//изменение количества флагов в меню
 			document.getElementById("countFlags").childNodes[0].nodeValue++;
 		}
 		else{
-			this.isPressedRightButtonMouse = true;
-			this.drawImage("images/flag_canvas.jpg", this.x, this.y, widthCell/6, heightCell/6, 2*widthCell/3, 2*heightCell/3);
+			//флаг установлен
+			this.isFlag = true;
+			//отрисовка картинки
+			this.drawImage("images/flag_canvas.jpg", this.x, this.y, this.width/6, this.height/6, 2*this.width/3, 2*this.height/3);
 			//изменение количества флагов в меню
 			document.getElementById("countFlags").childNodes[0].nodeValue--;
+			//условие для победы
 			if (this.isBomb) this.isRigthMark = true; 
 		}
 	}
@@ -99,8 +81,8 @@ class Cell{
 	//рисование фона 
 	drawBackround(color){
 		context.fillStyle = color;
-		context.fillRect(this.x, this.y, widthCell, heightCell);
-		
+		context.fillRect(this.x, this.y, this.width, this.height);	
+		this.drawBorders("2");
 	}
 	
 	//рисование рамки 
@@ -108,13 +90,16 @@ class Cell{
 		context.beginPath();
 		context.lineWidth = lineWidth;
 		context.strokeStyle = "#8B8B8A";//"darkgoldenrod";
-		context.rect(this.x, this.y, widthCell, heightCell);	
+		context.rect(this.x, this.y, this.width, this.height);	
 		context.closePath();
 		context.stroke();
 	}
 	
 	//печать текста
 	drawText(){
-		
+		context.fillStyle = "#000";
+		context.font = level.fontSizeCell + " serif";
+		context.fillText(this.number, this.x + this.width/3, this.y + this.height*0.75 );	
 	}
+
 }
